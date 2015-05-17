@@ -1,13 +1,16 @@
 #!/bin/sh
 ### BEGIN INIT INFO
 # Provides:
-# Required-Start:    $remote_fs $syslog
+# Required-Start:    $remote_fs $syslog $network
 # Required-Stop:     $remote_fs $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Start daemon at boot time
-# Description:       Enable service provided by daemon.
+# Short-Description: [description]
+# Description:       [description]
 ### END INIT INFO
+
+# Ubuntu Install: sudo service update-rc.d [script] defaults
+# NOTE: Be sure to add $log_folder to logrotate
 
 dir=""
 user=""
@@ -15,8 +18,11 @@ cmd=""
 
 name=`basename $0`
 pid_file="/var/run/$name.pid"
-stdout_log="/var/log/$name.log"
-stderr_log="/var/log/$name.err"
+
+log_folder="/var/log/$name"
+mkdir -p "$log_folder"
+stdout_log="$log_folder/out.log"
+stderr_log="$log_folder/err.log"
 
 get_pid() {
     cat "$pid_file"
@@ -35,6 +41,7 @@ case "$1" in
         cd "$dir"
         sudo -u "$user" $cmd >> "$stdout_log" 2>> "$stderr_log" &
         echo $! > "$pid_file"
+        sleep 1;
         if ! is_running; then
             echo "Unable to start, see $stdout_log and $stderr_log"
             exit 1

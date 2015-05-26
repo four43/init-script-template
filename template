@@ -10,7 +10,7 @@
 ### END INIT INFO
 
 # Ensure /etc/init.d/[this script] has execute bits set for permissions
-# Ubuntu Install: sudo service update-rc.d [script] defaults
+# Ubuntu Install: sudo update-rc.d [script] defaults
 # NOTE: Be sure to add $log_folder to logrotate
 
 dir=""

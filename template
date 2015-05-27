@@ -40,7 +40,11 @@ case "$1" in
     else
         echo "Starting $name"
         cd "$dir"
-        sudo -u "$user" $cmd >> "$stdout_log" 2>> "$stderr_log" &
+        # Simple run as user, no env:
+        # sudo -u "$user" $cmd >> "$stdout_log" 2>> "$stderr_log" &
+        
+        # Run as user, with login and access to that user's env vars.
+        su --command="cd $dir; ${cmd}" ${user} -l >> "$stdout_log" 2>> "$stderr_log" &
         echo $! > "$pid_file"
         sleep 1;
         echo " - Started as pid: " `get_pid`;

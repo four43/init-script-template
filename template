@@ -30,7 +30,7 @@ get_pid() {
 }
 
 is_running() {
-    [ -f "$lockfile" ] && [ `get_pid | tr -d '\n' | wc -w` -ne 0 ] && ps `get_pid` > /dev/null 2>&1
+    [ -f "$pid_file" ] && [ `get_pid | tr -d '\n' | wc -w` -ne 0 ] && ps `get_pid` > /dev/null 2>&1
 }
 
 case "$1" in

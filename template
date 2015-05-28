@@ -33,6 +33,18 @@ is_running() {
     [ -f "$pid_file" ] && [ `get_pid | tr -d '\n' | wc -w` -ne 0 ] && ps `get_pid` > /dev/null 2>&1
 }
 
+list_descendants ()
+{
+  local children=$(ps -o pid= --ppid "$1")
+
+  for pid in $children
+  do
+    list_descendants "$pid"
+  done
+
+  echo "$children"
+}
+
 case "$1" in
     start)
     if is_running; then
@@ -57,7 +69,7 @@ case "$1" in
     stop)
     if is_running; then
         echo -n "Stopping $name.."
-        kill `get_pid`
+        kill $(list_descendants $(get_pid))
         for i in {1..10}
         do
             if ! is_running; then
